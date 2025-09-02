@@ -284,6 +284,25 @@ root = tk.Tk()
 root.title("TCM Test Utility - PN")
 root.resizable(False, False)
 
+style = ttk.Style()
+style.configure("TNotebook.Tab", padding=[3, 3], font=('Calibri', 14))
+
+# Create a Notebook widget
+notebook = ttk.Notebook(root)
+notebook.pack(expand=True, fill='both')
+
+# Create frames for each tab
+tab1 = ttk.Frame(notebook)
+tab2 = ttk.Frame(notebook)
+tab3 = ttk.Frame(notebook)
+tab4 = ttk.Frame(notebook)
+
+# Add tabs to the notebook
+notebook.add(tab1, text='General')
+notebook.add(tab2, text='Speed')
+notebook.add(tab3, text='Extension')
+notebook.add(tab4, text='Load')
+
 # base64 STClogo string
 logo_base64 = b'''
 /9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABkAAD/4QP8aHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/\
@@ -349,34 +368,34 @@ image_data = base64.b64decode(logo_base64)
 image = Image.open(io.BytesIO(image_data))
 photo = ImageTk.PhotoImage(image)
 #Dispaly in a Label
-logoLabel = tk.Label(root, image=photo)
-logoLabel.grid(row=1, rowspan=2, column=4, columnspan=3, padx=(110, 20), pady=(12, 0), sticky="w")
+logoLabel = tk.Label(tab1, image=photo)
+logoLabel.grid(row=1, rowspan=2, column=1, columnspan=3, padx=(110, 40), pady=(12, 0), sticky="w")
 
-tk.Label(root, text="Select COM Port:").grid(row=0, column=0, columnspan=2, padx=20, pady=10, sticky="w")
+tk.Label(tab1, text="Select COM Port:").grid(row=0, column=0, columnspan=2, padx=20, pady=10, sticky="w")
 com_port_var = tk.StringVar()
 com_ports = list_serial_ports()
-com_port_menu = ttk.Combobox(root, textvariable=com_port_var, values=com_ports, state="readonly")
+com_port_menu = ttk.Combobox(tab1, textvariable=com_port_var, values=com_ports, state="readonly")
 com_port_menu.grid(row=0, column=0, columnspan=2,  padx=(150, 0), pady=10, sticky="w")
 if com_ports:
     com_port_var.set(com_ports[0])
 
-tk.Label(root, text="Baud Rate:").grid(row=0, column=2, padx=(30, 0), pady=10, sticky="w")
+tk.Label(tab1, text="Baud Rate:").grid(row=0, column=2, padx=(30, 0), pady=10, sticky="w")
 baud_rate_var = tk.StringVar(value="115200")
 baud_rates = ["9600", "19200", "38400", "57600", "115200", "230400", "460800", "921600"]
-baud_menu = ttk.Combobox(root, textvariable=baud_rate_var, values=baud_rates, state="readonly")
+baud_menu = ttk.Combobox(tab1, textvariable=baud_rate_var, values=baud_rates, state="readonly")
 baud_menu.grid(row=0, column=3, padx=10, pady=10, sticky="w")
 
-tk.Label(root, text="Timeout (s):").grid(row=0, column=4, columnspan=2,  padx=(30, 10), pady=10, sticky="w")
+tk.Label(tab1, text="Timeout (s):").grid(row=0, column=4, padx=(30, 0), pady=10, sticky="w")
 timeout_var = tk.StringVar(value="0.2")
-timeout_entry = ttk.Entry(root, textvariable=timeout_var, width=5)
-timeout_entry.grid(row=0, column=5, padx=10, pady=10, sticky="w")
+timeout_entry = ttk.Entry(tab1, textvariable=timeout_var, width=5)
+timeout_entry.grid(row=0, column=5, columnspan=2, padx=0, pady=10, sticky="w")
 
 auto_scroll_var = tk.BooleanVar(value=True)
-auto_scroll_check = ttk.Checkbutton(root, text="Auto-scroll", variable=auto_scroll_var)
-auto_scroll_check.grid(row=2, rowspan=3, column=6, padx=(60, 10), pady=(10, 25), sticky="w")
+auto_scroll_check = ttk.Checkbutton(tab1, text="Auto-scroll", variable=auto_scroll_var)
+auto_scroll_check.grid(row=0, column=6, rowspan=2, padx=(60, 10), pady=(0, 40), sticky="w")
 
 # Group 1: Bridge Control
-system_frame = ttk.LabelFrame(root, text="Bridge Control", padding=(10, 5))
+system_frame = ttk.LabelFrame(tab1, text="Bridge Control", padding=(10, 5))
 system_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
 for label, hex_cmd in [
@@ -387,7 +406,7 @@ for label, hex_cmd in [
     btn.pack(side=tk.LEFT, padx=5, pady=2)
 
 # Group 2: Direction
-direction_frame = ttk.LabelFrame(root, text="Direction", padding=(10, 5))
+direction_frame = ttk.LabelFrame(tab2, text="Direction", padding=(10, 5))
 direction_frame.grid(row=1, column=3, columnspan=2, padx=10, pady=5, sticky="w")
 
 for label, hex_cmd in [
@@ -398,7 +417,7 @@ for label, hex_cmd in [
     btn.pack(side=tk.LEFT, padx=5, pady=2)
 
 # Group 3: Drive To Distance
-position_frame = ttk.LabelFrame(root, text="Drive To Distance", padding=(10, 5))
+position_frame = ttk.LabelFrame(tab2, text="Drive To Distance", padding=(10, 5))
 position_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
 for label, hex_cmd in [
@@ -409,7 +428,7 @@ for label, hex_cmd in [
     btn.pack(side=tk.LEFT, padx=5, pady=2)
 
 # Group 4: Homing
-position_frame = ttk.LabelFrame(root, text="Homing", padding=(10, 5))
+position_frame = ttk.LabelFrame(tab2, text="Homing", padding=(10, 5))
 position_frame.grid(row=2, column=3, columnspan=2, padx=10, pady=5, sticky="w")
 
 for label, hex_cmd in [
@@ -420,7 +439,7 @@ for label, hex_cmd in [
     btn.pack(side=tk.LEFT, padx=5, pady=2)
 
 # Group 5: Execution Control
-execution_frame = ttk.LabelFrame(root, text="Execution Control", padding=(10, 5))
+execution_frame = ttk.LabelFrame(tab2, text="Execution Control", padding=(10, 5))
 execution_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=5, sticky="w")
 
 for label, hex_cmd in [
@@ -432,20 +451,20 @@ for label, hex_cmd in [
     btn.pack(side=tk.LEFT, padx=5, pady=2)
 
 # Standalone: Reset PI Gains
-rstPI_frame = tk.Frame(root)
+rstPI_frame = tk.Frame(tab1)
 rstPI_frame.grid(row=13, column=0, columnspan=3, pady=15)
 rstPIgain_btn = ttk.Button(rstPI_frame, text="Reset PI Gains", command=lambda h="01 10 00 44", l="Reset PI Gains": send_custom_command(h, l))
 rstPIgain_btn.pack(side=tk.LEFT, padx=10)
 
 # Standalone: Clear Response
-control_frame = tk.Frame(root)
+control_frame = tk.Frame(tab1)
 control_frame.grid(row=13, rowspan = 2, column=3, columnspan=4, padx=(100, 0), pady=15)
 clear_btn = ttk.Button(control_frame, text="Clear Response", command=clear_resp)
 clear_btn.pack(side=tk.LEFT, padx=10)
 
 # Frame to simulate a colored border
-border_frame = tk.LabelFrame(root, text="Response", background="#D4E2EE", padx=2, pady=2) 
-border_frame.grid(row=2, column=3, rowspan=14, columnspan=4, padx=(100, 10), pady=(50, 0))
+border_frame = tk.LabelFrame(tab1, text="Response", background="#D4E2EE", padx=2, pady=2) 
+border_frame.grid(row=1, column=3, rowspan=14, columnspan=4, padx=(140, 10), pady=(10, 50))
 
 # Styled ScrolledText inside the frame
 response_box = scrolledtext.ScrolledText(
@@ -474,15 +493,17 @@ get_btn = []
 
 for i in range(8):
     label_var = tk.StringVar(value=param_labels[i])
-    label_entry = tk.Label(root, textvariable=label_var, width=20, anchor='w')
+    label_entry = tk.Label(tab1, textvariable=label_var, width=20, anchor='w') if (i > 1) else tk.Label(tab2, textvariable=label_var, width=20, anchor='w')
     label_vars.append(label_var)
 
-    entry = ttk.Entry(root, width=15)
+    entry = ttk.Entry(tab1, width=15) if (i > 1) else ttk.Entry(tab2, width=15)
     float_entries.append(entry)
 
-    sendButton = ttk.Button(root, text="Send", command=lambda idx=i: send_hex_cmd_frame(SEND, idx))
+    sendButton = ttk.Button(tab1, text="Send", command=lambda idx=i: send_hex_cmd_frame(SEND, idx)) if (i > 1) else \
+                 ttk.Button(tab2, text="Send", command=lambda idx=i: send_hex_cmd_frame(SEND, idx))
     send_btn.append(sendButton)
-    getButton = ttk.Button(root, text="Get", command=lambda idx=i: send_hex_cmd_frame(GET, idx))
+    getButton = ttk.Button(tab1, text="Get", command=lambda idx=i: send_hex_cmd_frame(GET, idx)) if (i > 1) else \
+                ttk.Button(tab2, text="Get", command=lambda idx=i: send_hex_cmd_frame(GET, idx))
     get_btn.append(getButton)
 
     if i < 4:
@@ -490,26 +511,26 @@ for i in range(8):
             label_entry.grid(row=i+4, column=0, columnspan=2, padx=(35, 0), pady=(20, 5), sticky="w")
             entry.grid(row=i+4, column=1, padx=(0, 5), pady=(20, 5), sticky="w")
             sendButton.grid(row=i+4, column=2, padx=10, pady=(20, 5))
-            getButton.grid(row=i+4, column=2, columnspan=2, padx=(30, 0), pady=(20, 5))
+            getButton.grid(row=i+4, column=2, columnspan=2, padx=(30, 20), pady=(20, 5))
         else:
             label_entry.grid(row=i+4, column=0, columnspan=2, padx=(35, 0), pady=5, sticky="w")
             entry.grid(row=i+4, column=1, padx=(0, 5), pady=5, sticky="w")
             sendButton.grid(row=i+4, column=2, padx=10, pady=5)
-            getButton.grid(row=i+4, column=2, columnspan=2, padx=(30, 0), pady=5)
+            getButton.grid(row=i+4, column=2, columnspan=2, padx=(30, 20), pady=5)
         response_texts.append(response_box)
 
     else:
         label_entry.grid(row=i+5, column=0, padx=(35, 0), pady=5, sticky="w")
         entry.grid(row=i+5, column=1, padx=(0, 5), pady=5, sticky="w")
         sendButton.grid(row=i+5, column=2, padx=10, pady=5)
-        getButton.grid(row=i+5, column=2, columnspan=2, padx=(30, 0), pady=5)
+        getButton.grid(row=i+5, column=2, columnspan=2, padx=(30, 20), pady=5)
         response_texts.append(response_box)
 
     # Insert checkbox after 4th field (index 3)
     if i == 3:
         enable_gain_fields_var = tk.BooleanVar(value=False)
         gain_fields_check = ttk.Checkbutton(
-            root,
+            tab1,
             text="Enable Speed/Torque PI Gains Configuration",
             variable=enable_gain_fields_var,
             command=toggle_gain_fields
